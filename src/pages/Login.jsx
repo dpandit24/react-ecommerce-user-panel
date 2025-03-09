@@ -142,7 +142,7 @@ const Login = () => {
         />
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           Don't have an account?{" "}
-          <Link href="#" sx={{ color: "#f36a1b", textDecoration: "none" }}>
+          <Link href="/signup" sx={{ color: "#f36a1b", textDecoration: "none" }}>
             Sign up
           </Link>
         </Typography>

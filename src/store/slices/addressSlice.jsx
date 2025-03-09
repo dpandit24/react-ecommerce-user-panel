@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { db } from "../../firebase"; // Your Firebase config file
+import { db } from "../firebase"; // Your Firebase config file
 import {
   collection,
   addDoc,
@@ -11,14 +11,14 @@ import {
 // Async thunk to create a new address
 export const createAddress = createAsyncThunk(
   "address/createAddress",
-  async ({ userId, name, address, city, state, pincode }, { rejectWithValue }) => {
+  async ({ userId, name, street, city, state, pincode }, { rejectWithValue }) => {
     try {
       if (!userId) throw new Error("User ID is required to create an address!");
 
-      const docRef = await addDoc(collection(db, "addresses"), {
+      const docRef = await addDoc(collection(db, "address"), {
         userId,
         name,
-        address,
+        street,
         city,
         state,
         pincode,
@@ -28,7 +28,7 @@ export const createAddress = createAsyncThunk(
         id: docRef.id,
         userId,
         name,
-        address,
+        street,
         city,
         state,
         pincode,
@@ -46,7 +46,7 @@ export const fetchAddresses = createAsyncThunk(
     try {
       if (!userId) throw new Error("User ID is required to fetch addresses!");
 
-      const addressQuery = query(collection(db, "addresses"), where("userId", "==", userId));
+      const addressQuery = query(collection(db, "address"), where("userId", "==", userId));
       const querySnapshot = await getDocs(addressQuery);
 
       const addresses = querySnapshot.docs.map((doc) => ({

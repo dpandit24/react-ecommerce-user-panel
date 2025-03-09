@@ -10,6 +10,7 @@ const ProductGrid = ({ limit }) => {
   const navigate = useNavigate();
 
   const { products, loading, error } = useSelector((state) => state.products);
+  const { user } = useSelector((state) => state.auth); // Get user from Redux
 
   useEffect(() => {
     if (products.length === 0) {
@@ -46,7 +47,7 @@ const ProductGrid = ({ limit }) => {
       ) : error ? (
         <Typography variant="h6" color="error" align="center">Error: {error}</Typography>
       ) : (
-        <Products products={products} limit={limit} />
+        <Products products={products} limit={limit} userId={user?.id} /> 
       )}
     </Container>
   );
