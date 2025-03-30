@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography, Paper } from "@mui/material";
+import { TextField, Button, Box, Typography, Paper,IconButton } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { createAddress } from "../store/slices/addressSlice";
@@ -45,7 +46,14 @@ const AddressForm = ({ closeModal }) => { // Accept closeModal function
       };
         
     return (
-      <Box textAlign="center">
+      <Box textAlign="center" position="relative" p={2}>
+        {/* Close Button */}
+        <IconButton
+          onClick={closeModal}
+          sx={{ position: "absolute", right: 8, top: 1 }}
+        >
+          <CloseIcon />
+        </IconButton>
         <Typography variant="h5" fontWeight="bold">Add Address</Typography>
         <Typography variant="body2" color="textSecondary" mb={2}>Please enter your address details</Typography>
   

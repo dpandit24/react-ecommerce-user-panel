@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where,writeBatch } from "firebase/firestore";
 import { db } from "../firebase"; // Ensure this points to your Firebase configuration
 
 // Thunk to add a product to the cart
@@ -122,6 +122,29 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
+export const clearCartByUserId = createAsyncThunk(
+  "cart/clearCartByUserId",
+  async (userId, { rejectWithValue }) => {
+    try {
+      // Assuming you have a Firestore collection named "cart"
+      const cartRef = collection(db, "cart");
+      const q = query(cartRef, where("userId", "==", userId));
+      const querySnapshot = await getDocs(q);
+
+      const batch = writeBatch(db);
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      return userId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
 // Create the cart slice
 const cartSlice = createSlice({
   name: "cart",
@@ -199,7 +222,11 @@ const cartSlice = createSlice({
         const { productId } = action.meta.arg;
         state.loading[productId] = false;
         state.error = action.payload;
+      })
+      .addCase(clearCartByUserId.fulfilled, (state, action) => {
+        state.items = []; // Clear cart items in Redux
       });
+    
   },
 });
 

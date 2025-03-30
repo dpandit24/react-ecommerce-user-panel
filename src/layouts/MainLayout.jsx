@@ -4,18 +4,20 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 
 const theme = createTheme({
-  components: {
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          maxWidth: '100%', // Full width for small screens
-          maxWidth: '1900px', // Keeps max-width at 1900px
-          margin: '0 auto', // Centers the content
-          padding: '0 24px', // Adds padding for spacing
-        }
-      }
-    }
-  }
+  typography: {
+    fontFamily: "'Poppins', 'Roboto', sans-serif", // Use modern fonts
+    h1: { fontWeight: 700 },
+    h2: { fontWeight: 600 },
+    body1: { fontSize: '1rem' },
+  },
+  palette: {
+    primary: {
+      main: '#ff6f00', // Use a modern orange theme
+    },
+    secondary: {
+      main: '#333',
+    },
+  },
 });
 
 const MainLayout = ({ children }) => {
@@ -29,9 +31,9 @@ const MainLayout = ({ children }) => {
     >
       <Header />
       <ThemeProvider theme={theme}>
-        <Container component="main" sx={{ flex: 1, mt: 4, mb: 4 }}>
+        <Box component="main" sx={{ flex: 1, mt:  2, mb: 2 }}>
           {children}
-        </Container>
+        </Box>
       </ThemeProvider>
       <Footer />
     </Box>

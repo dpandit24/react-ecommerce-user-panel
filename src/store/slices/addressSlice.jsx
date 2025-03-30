@@ -4,6 +4,8 @@ import {
   collection,
   addDoc,
   getDocs,
+  deleteDoc,
+  doc,
   query,
   where,
 } from "firebase/firestore";
@@ -61,6 +63,21 @@ export const fetchAddresses = createAsyncThunk(
   }
 );
 
+// Async thunk to delete an address
+export const deleteAddress = createAsyncThunk(
+  "address/deleteAddress",
+  async (addressId, { rejectWithValue }) => {
+    try {
+      if (!addressId) throw new Error("Address ID is required to delete!");
+
+      await deleteDoc(doc(db, "address", addressId));
+      return addressId; // Return deleted ID to update state
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const addressSlice = createSlice({
   name: "address",
   initialState: {
@@ -92,6 +109,17 @@ const addressSlice = createSlice({
         state.addresses = action.payload;
       })
       .addCase(fetchAddresses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteAddress.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteAddress.fulfilled, (state, action) => {
+        state.loading = false;
+        state.addresses = state.addresses.filter((addr) => addr.id !== action.payload);
+      })
+      .addCase(deleteAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
